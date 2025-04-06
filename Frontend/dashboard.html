@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Collapsible Sidebar - Dark Theme</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+    }
+
+    #logoImage {
+      width: 32px;
+      height: 32px;
+    }
+  </style>
+</head>
+
+<body class="flex h-screen bg-[#0e0e0e] text-white">
+
+  <!-- Sidebar -->
+  <div id="sidebar"
+    class="bg-[#1f1f1f] w-64 min-w-[4rem] transition-all duration-300 overflow-hidden shadow-md relative flex flex-col justify-between">
+    <div>
+      <div class="flex items-center justify-between p-4 border-b border-gray-700">
+        <div class="flex items-center gap-2">
+          <img id="logoImage" src="logo.jpg" alt="Logo">
+          <span class="font-bold text-xl" id="logoText">Communify.io</span>
+        </div>
+        <button onclick="toggleSidebar()" class="text-white focus:outline-none">
+          ☰
+        </button>
+      </div>
+      <div class="p-4">
+        <p class="text-gold mb-4">Test<br><small class="text-yellow-400">Municipal Admin</small></p>
+        <ul class="space-y-3">
+          <li>
+            <a href="dashboard.html"
+              class="flex items-center gap-4 p-3 rounded bg-[#1f1f1f] text-gray-300 hover:bg-gray-700 transition-colors">
+              <span>🏠</span>
+              <span class="link-text">Dashboard</span>
+            </a>
+          </li>
+          <li>
+            <a href="settings.html"
+              class="flex items-center gap-4 p-3 rounded bg-[#1f1f1f] text-gray-300 hover:bg-gray-700 transition-colors">
+              <span>⚙️</span>
+              <span class="link-text">Settings</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="p-4 border-t border-gray-700">
+      <button class="w-full text-left text-red-500 p-3 rounded hover:bg-gray-700 transition-colors"
+        onclick="logout()">🚪 Logout</button>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="flex-1 p-6 overflow-y-auto">
+    <div class="flex justify-between items-center mb-4">
+      <h1 class="text-2xl font-semibold">Reported Issues</h1>
+      <select id="sortOption" onchange="sortData()" class="bg-[#1f1f1f] text-white border border-gray-600 rounded p-2">
+        <option value="risk">Sort by Risk Level</option>
+        <option value="reports">Sort by Reports</option>
+        <option value="recent">Sort by Recent</option>
+      </select>
+    </div>
+    <div id="issuesContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <!-- Card 1 -->
+      <a href="issue1.html" class="card block bg-[#1f1f1f] p-4 rounded shadow border border-gray-700" data-risk="1"
+        data-reports="12" data-date="2024-04-01">
+        <img src="broken Street Light pole.jpg" alt="Broken Streetlight" class="w-full h-32 object-cover rounded mb-2">
+        <h2 class="text-lg font-semibold">Broken Streetlight Pole - Michigan Avenue and 23rd Street</h2>
+        <p>Risk Level: <span class="text-red-400 font-bold">1</span></p>
+        <p>Reports: 12</p>
+      </a>
+      <!-- Card 2 -->
+      <a href="issue2.html" class="card block bg-[#1f1f1f] p-4 rounded shadow border border-gray-700" data-risk="3"
+        data-reports="30" data-date="2024-04-02">
+        <img src="broken stop sign.jpg" alt="Pothole" class="w-full h-32 object-cover rounded mb-2">
+        <h2 class="text-lg font-semibold">Fallen Stop Sign - Michigan Avenue and 23rd Street</h2>
+        <p>Risk Level: <span class="text-red-400 font-bold">3</span></p>
+        <p>Reports: 30</p>
+      </a>
+      <!-- Card 3 -->
+      <a href="issue3.html" class="card block bg-[#1f1f1f] p-4 rounded shadow border border-gray-700" data-risk="5"
+        data-reports="5" data-date="2024-04-03">
+        <img src="pothole.jpg" alt="Damaged Sign" class="w-full h-32 object-cover rounded mb-2">
+        <h2 class="text-lg font-semibold">Pothole - Wacker Drive and Franklin Street</h2>
+        <p>Risk Level: <span class="text-red-400 font-bold">5</span></p>
+        <p>Reports: 5</p>
+      </a>
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    function sortData() {
+      const sortOption = document.getElementById('sortOption').value;
+      const container = document.getElementById('issuesContainer');
+      const cards = Array.from(container.getElementsByClassName('card'));
+
+      cards.sort((a, b) => {
+        if (sortOption === 'risk') {
+          return b.dataset.risk - a.dataset.risk;
+        } else if (sortOption === 'reports') {
+          return b.dataset.reports - a.dataset.reports;
+        } else if (sortOption === 'recent') {
+          return new Date(b.dataset.date) - new Date(a.dataset.date);
+        }
+      });
+
+      // Clear and re-append sorted cards
+      container.innerHTML = '';
+      cards.forEach(card => container.appendChild(card));
+    }
+
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const texts = sidebar.querySelectorAll('.link-text, #logoText');
+      const logoImage = document.getElementById('logoImage');
+      const isCollapsed = sidebar.classList.contains('w-20');
+
+      sidebar.classList.toggle('w-64');
+      sidebar.classList.toggle('w-20');
+
+      texts.forEach(text => {
+        text.style.display = isCollapsed ? 'inline' : 'none';
+      });
+
+      logoImage.style.display = isCollapsed ? 'block' : 'inline';
+    }
+
+    function logout() {
+      window.location.href = "login.html";
+    }
+  </script>
+</body>
+
+</html>
