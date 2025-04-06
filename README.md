@@ -1,4 +1,4 @@
-# Communify.io 📍📱🤖
+# Communify.io - SH401📍📱🤖
 
 Empowering communities through AI-driven civic engagement.
 
